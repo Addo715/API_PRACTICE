@@ -1,14 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
 const App = () => {
-  useState(()=>{
-    fetch('https://jsonplaceholder.typicode.com/todos/1')
-      .then(response => response.json())
-      .then(json => console.log(json))
-  })
-  return (
-    <div>App</div>
-  )
-}
+  const [comments, setComments] = useState([]);
 
-export default App
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/comments?_limit=10')
+      .then((response) => response.json())
+      .then((data) => setComments(data))
+      .catch((error) => console.error('Error fetching comments:', error));
+  }, []);
+
+  return (
+    <div>
+      <h1>Comment List</h1>
+      <ul>
+        {comments.map((comment) => (
+          <li key={comment.id}>
+            <h3>{comment.name}</h3>
+            <p><strong>Email:</strong> {comment.email}</p>
+            <p>{comment.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default App;
